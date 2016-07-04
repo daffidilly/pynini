@@ -14,8 +14,10 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+#with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+#    long_description = f.read()
+
+long_description = "Read more at https://github.com/daffidilly/pynini"
 
 setup(
     name='pynini',
@@ -23,7 +25,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.4.0',  # TODO: single source this
+    version='0.4.2',  # TODO: single source this
 
     description='Pynini is a fast, simple and standalone "flat" or "static" HTML generator.',  # TODO: single source this
     long_description=long_description,
@@ -36,7 +38,7 @@ setup(
     author_email='daffidilly.opensource@gmail.com',
 
     # Choose your license
-    license='MIT',
+    license='Apache2',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -69,7 +71,8 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=['pynini'],  # find_packages(exclude=['contrib', 'docs', 'tests']),
+    #packages=['src/pynini'],  # find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -106,7 +109,8 @@ setup(
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    entry_points={
-        'scripts': ['bin/pynini'],
-    },
+    #entry_points={
+    #    'scripts': ['bin/pynini:main'],
+    #},
+    scripts=['bin/pynini'],
 )

@@ -6,7 +6,6 @@ from os.path import dirname, join
 
 pynini_bin_dir = dirname(sys.argv[0])
 pynini_root_dir = dirname(pynini_bin_dir)
-pynini_src_dir = join(pynini_root_dir, 'src')
 
 
 def die(msg):
@@ -22,11 +21,12 @@ except ImportError:
 try:
     import pynini
 except ImportError:
-    sys.path.append(pynini_src_dir)
+    sys.path.append(pynini_root_dir)
     try:
-        import pynini
+       	import pynini
     except ImportError as e:
         die("failed to import pynini, even after adding local src: %s, %s" % (pynini_src_dir, e))
+
 
 if __name__ == "__main__":
     config = pynini.Setup.determine()

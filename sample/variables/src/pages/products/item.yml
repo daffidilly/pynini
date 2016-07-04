@@ -2,7 +2,7 @@ generator:
   data_file: pages/products/index
   iteration_list_key: products
   iteration_item_key: product
-  output_filename: product/{{product.href}}
+  output_filename: product/{{product.phref}}
 
 
 #product:
