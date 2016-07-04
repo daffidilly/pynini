@@ -25,7 +25,7 @@ except ImportError:
     try:
        	import pynini
     except ImportError as e:
-        die("failed to import pynini, even after adding local src: %s, %s" % (pynini_src_dir, e))
+        die("failed to import pynini, even after adding local src: %s, %s" % (pynini_root_dir, e))
 
 
 if __name__ == "__main__":

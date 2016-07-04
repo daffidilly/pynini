@@ -1,16 +1,44 @@
 # -*- coding: utf-8 -*-
+import sys
+import errno
+import os
 import json
-from io import StringIO
-from pprint import pprint
-
-#import yaml
-import pyaml  # pip install pyaml
-from jinja2 import evalcontextfilter
+import pyaml
 import mistune
 
+from jinja2 import evalcontextfilter
+from pprint import pprint
 
-#markdown = mistune.Markdown()
+try:
+    from StringIO import StringIO  # Python 2
+except ImportError:
+    from io import StringIO  # Python 3
+
+try:
+    from collections import ChainMap
+except ImportError:
+    from chainmap import ChainMap  # python 2.7 polyfill; required 'pip install chainmap'
+
+
 markdown = mistune.Markdown(escape=True, hard_wrap=True)
+
+
+def mkdir_p_polyfill(path, perms, exist_ok):
+    """Make directories including parents.
+    Python >= 3.2 doesn't need this because the exist_ok parameter is there.
+    However, earlier python versions don't have that.
+    See http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python/600612#600612
+    """
+    try:
+        os.makedirs(path, perms)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise
+
+
+mkdir_p = mkdir_p_polyfill if sys.version_info < (3, 2) else os.makedirs
 
 
 class SimpleLog(object):
@@ -19,18 +47,18 @@ class SimpleLog(object):
 
     def debug(self, *args):
         if self.level > 1:
-            print(*args)
+            print(' '.join(args))
 
     def info(self, *args):
         # print("level=%s"% self.level)
         if self.level > 0:
-            print(*args)
+            print(' '.join(args))
 
     def warn(self, *args):
-        print("WARN:", *args)
+        print("WARN:", ' '.join(args))
 
     def error(self, *args):
-        print("ERROR:", *args)
+        print("ERROR:", ' '.join(args))
 
 
 def auto_str(cls):
@@ -49,6 +77,7 @@ def auto_str(cls):
     return cls
 
 
+# TODO DELETE
 @evalcontextfilter
 def count_length(eval_ctx, value):
     result = len(value)
@@ -59,7 +88,7 @@ def count_length(eval_ctx, value):
 
 def as_python(value):
     out = StringIO()
-    pprint(value, out)
+    ##pprint(value, out)
     return out.getvalue()
 
 

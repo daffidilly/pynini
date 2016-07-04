@@ -4,3 +4,5 @@ mypy
 dist
 .idea
 *.iml
+build
+pynini.egg-info

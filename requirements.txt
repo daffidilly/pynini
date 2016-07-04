@@ -3,3 +3,4 @@ MarkupSafe==0.23
 PyYAML==3.11
 mistune==0.7.3
 pyaml==15.8.2
+chainmap==1.0.2  ; python_version <= '2.7'

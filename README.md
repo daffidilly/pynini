@@ -2,17 +2,27 @@
 
 Pynini is a fast, simple and standalone "flat" or "static" HTML generator.
 
-**Note: Pynini is functional but the API is not stable yet.** 
+**Note: Pynini works but is still alpha.** 
 
 
 ## Installation
 
-TODO
+```bash
+virtualenv mypy       # Doesn't have to be "mypy"; can be anything.
+. mypy/bin/activate   # Start using the new virtual python.
+pip install pynini    # Install pynini and dependencies locally.
+```
 
 
 ## Basic Usage: Hello, World
 
-See ``samples/basic``. 
+For ready-to-run samples, see ``samples/basic`` and ``samples/variables``.
+ 
+Create working directories:
+
+    mkdir demo        # Any name you like
+    cd !$             # cd into it...
+    mkdir src src/layouts src/pages
 
 Create a layout file like ``src/layouts/main.html`` (it can be called anything but
 by convention is in that directory):

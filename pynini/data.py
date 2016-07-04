@@ -10,5 +10,5 @@ class YamlDataLoader(object):
         """Load a YAML file and return a dictionary"""
         with open(filename) as f:
             r = yaml.load(f)
-        print(r)
+        ##print(r)
         return r

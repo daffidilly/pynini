@@ -2,12 +2,11 @@
 import pprint
 import re
 import sys
-from collections import ChainMap
-from os import walk, chdir, makedirs
+from os import walk, chdir
 from os.path import dirname, join, relpath, isdir, splitext
-
 import jinja2
 
+from pynini.utils import mkdir_p, ChainMap
 from pynini.exceptions import SetupError
 
 
@@ -41,8 +40,7 @@ class Formatter(object):
                     loaded_dict = loader.loadf(path)
                     self.data[data_key] = loaded_dict
 
-                    self.setup.log.debug("data key [%s] ->" % (data_key, ), root, filename, )
-                    pprint.pprint(loaded_dict, sys.stdout)
+                    #self.setup.log.debug("data key [%s] ->" % (data_key, ), root, filename, ); pprint.pprint(loaded_dict, sys.stdout)
 
         #pprint.pprint(self.data, sys.stdout)
         #print("XXXXX data:", self.data)
@@ -72,8 +70,7 @@ class Formatter(object):
 
                 generator = file_variables.get('generator')
                 if generator:
-                    print("XXX GENERATOR %s:" % data_key)
-                    pprint.pprint(generator, sys.stdout)
+                    #print("XXX GENERATOR %s:" % data_key); pprint.pprint(generator, sys.stdout)
 
                     data_file = generator.get('data_file')
                     iteration_list_key = generator.get('iteration_list_key')
@@ -93,8 +90,7 @@ class Formatter(object):
                         if not iteration_list:
                             raise SetupError('%s generator could not find key "%s" in generator data' % (page.file_path, iteration_list_key))
 
-                    print("XXX ROOT %s:" % data_key)
-                    pprint.pprint(iteration_list, sys.stdout)
+                    #print("XXX ROOT %s:" % data_key); pprint.pprint(iteration_list, sys.stdout)
 
                     if not output_filename:
                         raise SetupError('%s generator did not include output_filename' % (page.file_path,))
@@ -102,8 +98,7 @@ class Formatter(object):
                     page_name_template = self.setup.jinja.from_string(output_filename)
 
                     for iteration_item in iteration_list:
-                        print("XXX ITERATION ITEM")
-                        pprint.pprint(iteration_item, sys.stdout)
+                        #print("XXX ITERATION ITEM"); pprint.pprint(iteration_item, sys.stdout)
 
                         # i love daddy
                         # automatic_variables = dict(
@@ -117,7 +112,7 @@ class Formatter(object):
                         })  #.new_child(automatic_variables)
 
                         page_name = page_name_template.render(context)
-                        print("XXX page_name=", page_name)
+                        #print("XXX page_name_template=[%s] -> page_name=[%s]" % (output_filename, page_name))
 
                         page.write(
                             out_path=join(self.setup.dist_dir, page_name),
@@ -204,7 +199,7 @@ class Page(object):
     def write(self, out_path, context):
         out_dir = dirname(out_path)
         if not isdir(out_dir):
-            makedirs(out_dir, self.setup.mkdir_perms, exist_ok=True)
+            mkdir_p(out_dir, self.setup.mkdir_perms, exist_ok=True)
 
         self.setup.log.info("format: %s (%s) -> %s" % (
             self.file_name, self.file_path, out_path))

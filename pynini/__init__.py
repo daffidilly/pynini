@@ -10,14 +10,6 @@ TODO: documentation
 __docformat__ = 'markdown en'
 __version__ = '0.5'
 
-import sys
-import re
-from argparse import ArgumentParser
-from os import getcwd, walk, chdir, makedirs
-from os.path import dirname, basename, join, relpath, isdir
-from collections import ChainMap
-import jinja2
-
 from pynini.exceptions import SetupError
 from pynini.setup import Setup
 from pynini.formatting import Formatter, Page
