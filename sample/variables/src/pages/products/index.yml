@@ -37,10 +37,10 @@ products: &products
         2. minus molestiae
         3. vel beatae natus
 
-
-generate:
-  - template:  item.html
-  - items:     *products
+#
+#generate:
+#  - template:  item.html
+#  - items:     *products
 #
 #  - url:       bucket.html
 #    product:   *A4786

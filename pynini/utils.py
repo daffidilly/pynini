@@ -72,18 +72,9 @@ def auto_str(cls):
     return cls
 
 
-# TODO DELETE
-@evalcontextfilter
-def count_length(eval_ctx, value):
-    result = len(value)
-    # if eval_ctx.autoescape:
-    #    result = Markup(result)
-    return str("That is %d long" % result)
-
-
 def as_python(value):
     out = StringIO()
-    ##pprint(value, out)
+    pprint(value, out)
     return out.getvalue()
 
 

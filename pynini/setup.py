@@ -8,7 +8,7 @@ import jinja2
 
 from pynini.data import YamlDataLoader
 from pynini.exceptions import SetupError
-from pynini.utils import auto_str, count_length, as_python, as_json, as_yaml, filter_markdown_to_html, SimpleLog
+from pynini.utils import auto_str, as_python, as_json, as_yaml, filter_markdown_to_html, SimpleLog
 from pynini.writing import TemplateFileWriter
 
 
@@ -49,16 +49,10 @@ class Setup(object):
             lstrip_blocks=True,
         )
 
-        self.jinja.filters['count_length'] = count_length
         self.jinja.filters['as_python'] = as_python
         self.jinja.filters['as_json'] = as_json
         self.jinja.filters['as_yaml'] = as_yaml
         self.jinja.filters['as_markdown'] = filter_markdown_to_html
-
-        # self.jinja.filters['count_length'] = count_length
-        # self.jinja.filters['count_length'] = count_length
-        ##print(self.jinja.filters)
-
 
     @staticmethod
     def determine(argv=None):

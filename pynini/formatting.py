@@ -109,8 +109,9 @@ class Formatter(object):
 
                         context = global_context.new_child({
                             iteration_item_key: iteration_item,
-                            iteration_list_key: iteration_list
-                        })  #.new_child(automatic_variables)
+                            iteration_list_key: iteration_list,
+                            **file_variables,
+                        })#.new_child(file_variables)
 
                         page_name = page_name_template.render(context)
                         #print("XXX page_name_template=[%s] -> page_name=[%s]" % (output_filename, page_name))
