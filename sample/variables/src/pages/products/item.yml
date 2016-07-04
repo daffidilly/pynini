@@ -1,0 +1,31 @@
+generator:
+  data_file: pages/products/index
+  iteration_list_key: products
+  iteration_item_key: product
+  output_filename: product/{{product.href}}
+
+
+#product:
+#  caption: todo
+#  part_no: A1234
+#  quantity: 7
+#  price: 13.49
+#  description:  |
+#    ### Notes
+#
+#    If ``ensure_ascii`` is true (the default), the output is
+#    *guaranteed* to have all incoming non-ASCII characters
+#    escaped. If ``ensure_ascii`` is false, these characters
+#    will be output as-is.
+#
+#    - ipso
+#    - facto
+#
+#    ### Features
+#
+#    1. Qui dicta
+#    2. minus molestiae
+#    3. vel beatae natus
+#
+
+

@@ -1,0 +1,48 @@
+title: Product List
+
+products: &products
+  - &A4786
+    part_no:   A4786
+    caption:   Water Bucket (Filled)
+    price:     1.47
+    quantity:  4
+    href:      bucket.html
+    description:  |
+        ### This is markdown
+
+        1. Foo
+        2. Bar
+
+  - &E1628
+    part_no:   E1628
+    caption:   High Heeled "Ruby" Slippers
+    size:      8
+    price:     133.7
+    quantity:  1
+    href:      slippers.html
+    description:  |
+        ### Notes
+
+        If ``ensure_ascii`` is true (the default), the output is
+        *guaranteed* to have all incoming non-ASCII characters
+        escaped. If ``ensure_ascii`` is false, these characters
+        will be output as-is.
+
+        - ipso
+        - facto
+
+        ### Features
+
+        1. Qui dicta
+        2. minus molestiae
+        3. vel beatae natus
+
+
+generate:
+  - template:  item.html
+  - items:     *products
+#
+#  - url:       bucket.html
+#    product:   *A4786
+#  - url:       slippers.html
+#    product:   *E1628

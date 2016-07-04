@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+
+from os.path import dirname, join
+
+pynini_bin_dir = dirname(sys.argv[0])
+pynini_root_dir = dirname(pynini_bin_dir)
+pynini_src_dir = join(pynini_root_dir, 'src')
+
+
+def die(msg):
+    sys.stderr.write(msg + '\n')
+    sys.exit(1)
+
+
+try:
+    import jinja2
+except ImportError:
+    die("jinja2 is not installed")
+
+try:
+    import pynini
+except ImportError:
+    sys.path.append(pynini_src_dir)
+    try:
+        import pynini
+    except ImportError as e:
+        die("failed to import pynini, even after adding local src: %s, %s" % (pynini_src_dir, e))
+
+if __name__ == "__main__":
+    config = pynini.Setup.determine()
+    builder = pynini.Formatter(config)
+    builder.run()

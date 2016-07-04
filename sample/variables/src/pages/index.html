@@ -1,0 +1,11 @@
+{% extends "layouts/main.html" %}
+{% block body %}
+
+<h1>Home</h1>
+
+{% include 'partials/menu.html' %}
+
+Hello, &ldquo;<strong>{{name or 'OOPS, you should see a name here'}}</strong>&rdquo;.
+
+{% endblock body %}
+

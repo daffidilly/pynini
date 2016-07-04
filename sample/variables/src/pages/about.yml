@@ -1,0 +1,16 @@
+title: About
+description:  >
+    A paragraph here about staff.
+    Note that this is in the data file, but it really doesn't have to be.
+    I put it in the data file to show
+    a) multiline text in data
+    b) that text content like this can go in the data area.
+
+staff:
+    - first:   Andrew
+      last:    Olson
+      img:     https://randomuser.me/api/portraits/men/78.jpg
+
+    - first:   Adam
+      last:    Willis
+      img:     https://randomuser.me/api/portraits/men/91.jpg

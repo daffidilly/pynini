@@ -1,0 +1,29 @@
+{% extends "layouts/main.html" %}
+{% block body %}
+<h1>Products</h1>
+{% include 'partials/menu.html' %}
+<ul>
+{% for product in products %}
+  <li><a href="../product/{{ product.href }}">{{ product.caption }}</a></li>
+{% endfor %}
+</ul>
+
+<p>static text:{{'foo'|count_length}}</p>
+<p>include text:{% include 'pages/products/plain.txt' | upper %}</p>
+
+<h2>Product Data</h2>
+
+<h3>As python:</h3>
+<pre>{{products|as_python}}</pre>
+
+<h3>As JSON:</h3>
+<pre>{{products|as_json}}</pre>
+
+<h3>As YAML:</h3>
+<pre>{{products|as_yaml}}</pre>
+
+<h2>Generator Details</h2>
+<pre>{{generate|as_python}}</pre>
+
+{% endblock body %}
+

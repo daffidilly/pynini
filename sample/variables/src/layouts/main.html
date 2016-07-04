@@ -1,0 +1,13 @@
+<html>
+<head>
+<title>{% block title %}{{title}}{% endblock %}</title>
+<link rel="stylesheet" href="{{root}}assets/main.css">
+</head>
+<body>
+{% block body %}
+{# Main content will go here... #}
+{% endblock body %}
+{% include 'partials/footer.html' %}
+</body>
+</html>
+

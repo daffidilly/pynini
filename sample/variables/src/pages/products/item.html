@@ -1,0 +1,28 @@
+{% extends "layouts/main.html" %}
+
+{# Redefine the title block to use the product caption #}
+{% block title %}Product: {{product.caption}}{% endblock %}
+
+{% block body %}
+<h1>Product: {{product.caption}}</h1>
+{% include 'partials/menu.html' %}
+<ul class="product">
+  <li>Part #:      {{product.part_no}}</li>
+  <li>Price:       {{product.price}}</li>
+  <li>Quantity:    {{product.quantity}}</li>
+</ul>
+<div class="description">{{product.description | as_markdown}}</div>
+
+<h2>Product Data</h2>
+
+<h3>As python:</h3>
+<pre>{{product|as_python}}</pre>
+
+<h3>As JSON:</h3>
+<pre>{{product|as_json}}</pre>
+
+<h3>As YAML:</h3>
+<pre>{{product|as_yaml}}</pre>
+
+{% endblock body %}
+

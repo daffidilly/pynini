@@ -1,0 +1,6 @@
+*.pyc
+mypy
+*.swp
+dist
+.idea
+*.iml
