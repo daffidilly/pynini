@@ -70,14 +70,14 @@ of reasons, like:
  
 There is a trend in modern web applications away from dynamically
 generated server-side pages and toward a mix of static server-side
-HTML content, server APIs and dynamic client-side HTML templating (e.g.
-React and Angular).
+HTML content, server APIs and dynamic client-side HTML templating such
+as React and Angular.
 
 Pynini is inspired by [Zurb Foundation's Panini](http://foundation.zurb.com/sites/docs/panini.html)
 and [Frozen Flask](http://pythonhosted.org/Frozen-Flask/).
 
-I've sought to take the best elements of both, remove elements I didn't like,
-and add in latest, modern ideas.
+We've sought to take the best elements of both, remove elements we didn't like,
+and add in our own - hopefully useful and modern - ideas.
 
 Use Pynini in conjection with tools like ``webpack`` to assemble the entire site
 and tools like ``rsync`` and ``lftp`` to push changes to a hosting server.
@@ -89,12 +89,11 @@ and tools like ``rsync`` and ``lftp`` to push changes to a hosting server.
 
   The suggested directory layout:
 
-    src/
-      layouts/
-      pages/
-      partials/
-
-    dist/
+        src/
+          layouts/
+          pages/
+          partials/
+        dist/       # automatically created
     
   Page data is provided by naming conventions, so the file ``foo.html``
   can have data provided by ``foo.yml`` (or ``foo.json``).
@@ -119,23 +118,40 @@ having to have *any* code. Pynini uses data to fill in variables as well as gene
 pages.
 
 
-### Data
+### Variables, Data and Page Generation
 
-  Panini ``index.html``:
+Pages can refer to variables defined in data files, and pages can be *generated* from data.
 
-    ---
-    title: Page Title
-    description: Lorem ipsum.
-    ---
-    
-    <!-- The rest of your HTML is down here. -->
+Data is matched by filename. Consider an example template ``about.html``:
 
-  The *Pynini* version of ``index.html``:
+```html
+{% extends "layouts/main.html" %}
+{% block body %}
+<h1>About</h1>
+<ul class="staff">
+  {% for person in staff %}
+  <li>{{person.first}} {{person.last}}
+    <img alt="image of {{person.first}} {{person.last}}" src="{{person.img}}">
+  </li>
+  {% endfor %}
+</ul>
+{% endblock body %}
+```
 
-    <!-- The rest of your HTML is down here. -->
+Data like ``staff`` must be specified in a file named ``about.yml``: (Other formats like
+JSON are intended to be supported. File an issue if this is a priority.)
 
-  with additional ``index.yml`` (or ``INI`` or ``JSON``):
+```yml
+staff:
+    - first:   Andrew
+      last:    Olson
+      img:     https://randomuser.me/api/portraits/men/78.jpg
 
-    title: Page Title
-    description: Lorem ipsum.
-    
+    - first:   Adam
+      last:    Willis
+      img:     https://randomuser.me/api/portraits/men/91.jpg
+```
+
+Pages can be generated. Documentation on that is not yet written. To see an example
+look in ``samples/variables``, particularly ``src/pages/products/item.html``.
+
