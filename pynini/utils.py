@@ -14,11 +14,6 @@ try:
 except ImportError:
     from io import StringIO  # Python 3
 
-try:
-    from collections import ChainMap
-except ImportError:
-    from chainmap import ChainMap  # python 2.7 polyfill; required 'pip install chainmap'
-
 
 markdown = mistune.Markdown(escape=True, hard_wrap=True)
 

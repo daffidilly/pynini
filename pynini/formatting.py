@@ -6,7 +6,8 @@ from os import walk, chdir
 from os.path import dirname, join, relpath, isdir, splitext
 import jinja2
 
-from pynini.utils import mkdir_p, ChainMap
+from chainmap import ChainMap  # python 2.7 polyfill; uses Python 3 ChainMap if available
+from pynini.utils import mkdir_p
 from pynini.exceptions import SetupError
 
 
