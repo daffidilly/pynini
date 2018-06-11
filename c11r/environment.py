@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import configparser
 import logging
-import pathlib
 import sys
 from argparse import ArgumentParser
 from os import getcwd, makedirs
@@ -9,8 +8,9 @@ from os.path import isdir
 
 import arrow as arrow
 import jinja2
+from pathlib import Path
 
-from c11r.processing import JinjaProcessor, DefaultProcessor
+from .processing import JinjaProcessor, DefaultProcessor
 from .data import YamlDataLoader
 from .exceptions import SetupError
 from .utils import auto_str, as_python, as_json, as_yaml, filter_markdown_to_html, SimpleLog
@@ -20,7 +20,9 @@ sect = 'conflatinator'
 
 
 def check_dirs(kind, dir_or_dirs, create=False):
-    if isinstance(dir_or_dirs, str):
+    if not dir_or_dirs:  # None or anything falsy
+        return dir_or_dirs
+    elif isinstance(dir_or_dirs, str):
         dirs = [dir_or_dirs]
     else:
         dirs = dir_or_dirs
@@ -61,8 +63,9 @@ class Environment(object):
 
         self.mkdir_perms = 0o777  # TODO: is this needed?
 
-        template_loader = template_loader or jinja2.FileSystemLoader([
-                                                                         self.src_dir] + self.include_dirs, )
+        # find templates in both the src dir and the list of include dirs
+        template_loader = template_loader or jinja2.FileSystemLoader(
+            [self.src_dir] + self.include_dirs, )
 
         # self.template_writer = template_writer or TemplateFileWriter()
 
@@ -89,15 +92,15 @@ class Environment(object):
 def auto_config(operation_dir=None):
     operation_dir = operation_dir or getcwd()
     config = configparser.ConfigParser()
-    config['DEFAULT'] = {
+    config[sect] = {
         'src_dir': 'pages',
-        'output_dir': 'build',  # or release or output?
+        'output_dir': 'dist',  # or release or output?
         'include_dirs': '',
         'verbosity': '0',
     }
 
     # import pdb; pdb.set_trace()
-    ini_file_dir = pathlib.Path(operation_dir)
+    ini_file_dir = Path(operation_dir)
     names = [
         ini_file_dir / 'c11r.ini',
         ini_file_dir / 'conflatinator.ini',
@@ -113,7 +116,7 @@ def auto_config(operation_dir=None):
 def auto(argv=None, prog=None):
     argv = argv or sys.argv  # use command-line flags if nothing else passed
     if not prog:
-        prog = pathlib.Path(argv[0]).name
+        prog = Path(argv[0]).name
 
     operation_dir = getcwd()
     config = auto_config(operation_dir)
@@ -142,6 +145,14 @@ def auto(argv=None, prog=None):
     logger.debug('src_dir: %s', parsed_args.src)
     logger.debug('output_dir: %s', parsed_args.output)
     logger.debug('include_dirs: %s', parsed_args.include)
+
+    if not parsed_args.include:
+        # Default to include the 'templates' dir ... is this too magic?
+        # if isdir('templates'):
+        #     parsed_args.include = ['templates']
+        # elif isdir('layouts'):
+        #     parsed_args.include = ['layouts']
+        parsed_args.include = ['.']
 
     src_dir = check_dirs('src', parsed_args.src)
     output_dir = check_dirs('output', parsed_args.output, create=True)

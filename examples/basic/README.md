@@ -1,1 +1,1 @@
-A basic "hello world" pynini sample.
+A basic "hello world" conflatinator sample.
