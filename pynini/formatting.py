@@ -23,17 +23,17 @@ class Formatter(object):
         self.transform_templates()
 
     def load_data(self):
-        # work in the parent of the pages directory, because we
-        # want the filenames to begin "pages/...".
-        chdir(dirname(self.setup.pages_dir))
-        rel = relpath(self.setup.pages_dir)
+        # TODO DELETE THIS COMMENT AND LOGIC
+        # # work in the parent of the pages directory, because we
+        # # want the filenames to begin "pages/...".
+        # chdir(dirname(self.setup.pages_dir))
+        # rel = relpath(self.setup.pages_dir)
         for root, dirs, files in walk(rel):
             for filename in files:
                 start, ext = splitext(filename)
                 if ext in self.setup.data_extensions:
-                    #yield root, dirs, filename
                     loader = self.setup.data_loaders.get(ext)
-                    path = join(root,filename)
+                    path = join(root, filename)
                     if not loader:
                         raise SetupError("Identified data file '%s' by type '%s' but no loader found" % (filename, ext))
 

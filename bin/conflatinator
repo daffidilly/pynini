@@ -1,11 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import pathlib
 
-from os.path import dirname, join
+pynini_root_dir = pathlib.Path(sys.argv[0]).resolve().parents[2]
+pynini_bin_dir = pynini_root_dir / 'bin'
 
-pynini_bin_dir = dirname(sys.argv[0])
-pynini_root_dir = dirname(pynini_bin_dir)
+print('root', pynini_root_dir)
+print('bin', pynini_bin_dir)
+
+# from os.path import dirname, join
+# pynini_bin_dir = dirname(sys.argv[0])
+# pynini_root_dir = dirname(pynini_bin_dir)
 
 
 def die(msg):
@@ -18,12 +24,13 @@ try:
 except ImportError:
     die("jinja2 is not installed")
 
+
 try:
     import pynini
 except ImportError:
-    sys.path.append(pynini_root_dir)
+    sys.path.append(pynini_root_dir.root)
     try:
-       	import pynini
+        import pynini
     except ImportError as e:
         die("failed to import pynini, even after adding local src: %s, %s" % (pynini_root_dir, e))
 

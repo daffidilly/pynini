@@ -4,7 +4,7 @@ import errno
 import os
 import json
 import pyaml
-import mistune
+import CommonMark  # https://github.com/rtfd/CommonMark-py
 
 from jinja2 import evalcontextfilter
 from pprint import pprint
@@ -15,7 +15,10 @@ except ImportError:
     from io import StringIO  # Python 3
 
 
-markdown = mistune.Markdown(escape=True, hard_wrap=True)
+markdown_parser = CommonMark.Parser()
+markdown_renderer = CommonMark.HtmlRenderer()
+# ast = parser.parse("Hello *World*")
+# html = renderer.render(ast)
 
 
 def mkdir_p_polyfill(path, perms, exist_ok):
@@ -33,9 +36,11 @@ def mkdir_p_polyfill(path, perms, exist_ok):
             raise
 
 
+# TODO REQUIRE python 3.2 AND DELETE THIS
 mkdir_p = mkdir_p_polyfill if sys.version_info < (3, 2) else os.makedirs
 
 
+# TODO DELETE THIS; USE NORMAL LOGGER
 class SimpleLog(object):
     def __init__(self, level):
         self.level = level or 0
@@ -91,4 +96,5 @@ def as_yaml(value):
 def filter_markdown_to_html(eval_ctx, value):
     # if eval_ctx.autoescape:
     #    result = Markup(result)
-    return markdown(value)
+    return markdown_renderer.render(markdown_parser.parse(value))
+

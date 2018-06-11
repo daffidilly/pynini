@@ -1,6 +1,7 @@
 Jinja2==2.8
 MarkupSafe==0.23
 PyYAML==3.11
-mistune==0.7.3
+# mistune==0.7.3  # prefer commonmark
+CommonMark==0.7.5
 pyaml==15.8.2
 chainmap==1.0.2

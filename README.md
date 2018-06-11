@@ -1,8 +1,6 @@
-# Pynini
+# Conflatinntor
 
-Pynini is a fast, simple and standalone "flat" or "static" HTML generator.
-
-**Note: Pynini works but is still alpha.** 
+The Conflatinator, formerly known as Pynini, is a fast, simple, standalone "static" HTML generator.
 
 
 ## Installation
@@ -10,7 +8,7 @@ Pynini is a fast, simple and standalone "flat" or "static" HTML generator.
 ```bash
 virtualenv mypy       # Doesn't have to be "mypy"; can be anything.
 . mypy/bin/activate   # Start using the new virtual python.
-pip install pynini    # Install pynini and dependencies locally.
+pip install conflatinator
 ```
 
 
@@ -22,10 +20,60 @@ Create working directories:
 
     mkdir demo        # Any name you like
     cd !$             # cd into it...
-    mkdir src src/layouts src/pages
+    mkdir web templates release
 
-Create a layout file like ``src/layouts/main.html`` (it can be called anything but
-by convention is in that directory):
+The `web` dir is where all your HTML and other static assets will go.
+It doesn't have to be called `web` but that is the default source directory.
+
+The Conflatinator will walk the contents of that directory. 
+
+Files with the extension `.jinja2` are processed as Conflatinator source files
+and the result written to `release` directory. Files without that extension are
+copied as-is. Relative paths of the files are kept as-is.
+
+For example:
+
+- `web/index.html.jinja2` is processed and the output written to `release/index.html`
+- `web/favicon.ico` is copied as-is to `release/favicon.ico`
+- `web/js/foo.js` is copied as-is to `release/js/foo.js`
+- `web/js/bar.js.jinja2` is processed and the output written to `release/js/bar.js`
+
+
+## Running
+
+Run Conflatinator as a command-line script like this:
+
+    $ conflatinator
+    
+Or equivalently but with less typing:
+
+    $ c11r
+    
+By default the Conflatinator expects to read and write from certain directories,
+but each of these can be changed with either command line options or the
+`conflatinator.ini` file in the root directory of the project:
+
+- Search source files in the `web` directory
+- Read data from the `data` directory (TODO: should this just be an include dir?)
+- Output to the `release` directory
+- Include from the `templates` directory
+ 
+That is the equivalent of
+
+    $ c11r -r web -d data -o release -i templates
+
+ 
+## Formatting and templates
+
+All formatting is done through Jinja2.
+
+You don't have to use template files, but if you do the convention is to place them
+in the `templates` directory. To be more general, any file you want to access during
+processing but not have included in the output should be placed in an `include`
+directory, with the default being `templates`.
+ 
+Here's an example template, which might be under `templates/main.html` (it can be
+called anything):
 
 ```html
 <html>
@@ -40,15 +88,18 @@ by convention is in that directory):
 </html>
 ```
 
-Add a page file like ``src/pages/index.html``:
+Add an HTML file like ``web/index.html``:
 
 ```html
-{% extends "layouts/main.html" %}
+{% extends "main.html" %}
 {% block title %}Basic Sample{% endblock %}
 {% block body %}
 Hello, World
 {% endblock body %}
 ```
+
+Note that you could also write `extends "templates/main.html"` if you specifc the current
+directory as an include directory with `conflatinator -i .`.
 
 Run the formatter:
 
@@ -95,6 +146,8 @@ and tools like ``rsync`` and ``lftp`` to push changes to a hosting server.
 
 ## Principles
 
+TODO THIS IS OUTDATED
+
 - convention over configuration and code.
 
   The suggested directory layout:
@@ -123,7 +176,7 @@ Pynini differs from Panini:
 
 - It's built with Python not JavaScript, in case that matters to anyone.
 
-The "frozen flask" project is another inspiration, but from that I didn't like
+The "frozen flask" project is another inspiration, but from that we didn't like
 having to have *any* code. Pynini uses data to fill in variables as well as generate
 pages.
 
@@ -147,6 +200,8 @@ Data is matched by filename. Consider an example template ``about.html``:
 </ul>
 {% endblock body %}
 ```
+
+TODO HAVE ACCESS TO DATA BY A DIRECTIVE LIKE {% data 'anything.yml' %}
 
 Data like ``staff`` must be specified in a file named ``about.yml``: (Other formats like
 JSON are intended to be supported. File an issue if this is a priority.)
