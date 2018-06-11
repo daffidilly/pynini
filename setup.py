@@ -17,10 +17,10 @@ here = path.abspath(path.dirname(__file__))
 #with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 #    long_description = f.read()
 
-long_description = "Read more at https://github.com/daffidilly/pynini"
+long_description = "Read more at https://github.com/daffidilly/conflatinator"
 
 setup(
-    name='pynini',
+    name='conflatinator',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/daffidilly/pynini',
+    url='https://github.com/daffidilly/conflatinator',
 
     # Author details
     author='Daffidilly',
@@ -71,7 +71,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    #packages=['src/pynini'],  # find_packages(exclude=['contrib', 'docs', 'tests']),
+    #packages=['src/conflatinator'],  # find_packages(exclude=['contrib', 'docs', 'tests']),
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
@@ -91,6 +91,7 @@ setup(
     extras_require={
         #'dev': ['check-manifest'],
         #'test': ['coverage'],
+        # TODO: still trying to support Python 2.7?
         ':python_version <= "2.7"': [
             'chainmap>=1.0.2',
         ],
@@ -113,7 +114,8 @@ setup(
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
     #entry_points={
-    #    'scripts': ['bin/pynini:main'],
+    #    'scripts': ['bin/conflatinator:main'],
     #},
-    scripts=['bin/pynini'],
+    scripts=['bin/conflatinator', 'bin/c11r'],
 )
+
