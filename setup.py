@@ -25,7 +25,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.4.4',  # TODO: single source this
+    version='1.0.0',  # TODO: get from c11r/__init__.py
 
     description='Pynini is a fast, simple and standalone "flat" or "static" HTML generator.',  # TODO: single source this
     long_description=long_description,

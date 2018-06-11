@@ -3,15 +3,11 @@
 import sys
 import pathlib
 
-pynini_root_dir = pathlib.Path(sys.argv[0]).resolve().parents[2]
-pynini_bin_dir = pynini_root_dir / 'bin'
+root_dir = pathlib.Path(sys.argv[0]).resolve().parents[1]
+bin_dir = root_dir / 'bin'
 
-print('root', pynini_root_dir)
-print('bin', pynini_bin_dir)
-
-# from os.path import dirname, join
-# pynini_bin_dir = dirname(sys.argv[0])
-# pynini_root_dir = dirname(pynini_bin_dir)
+# print('root', root_dir)
+# print('bin', bin_dir)
 
 
 def die(msg):
@@ -26,16 +22,27 @@ except ImportError:
 
 
 try:
-    import pynini
+    import c11r
 except ImportError:
-    sys.path.append(pynini_root_dir.root)
+    sys.path.insert(0, str(root_dir))
     try:
-        import pynini
+        import c11r
     except ImportError as e:
-        die("failed to import pynini, even after adding local src: %s, %s" % (pynini_root_dir, e))
+        die("failed to import conflatintor\n"
+            "- added local src: {}\n"
+            "- syspath: {}\n"
+            "- error: {}\n".format(root_dir, sys.path, e))
 
 
 if __name__ == "__main__":
-    config = pynini.Setup.determine()
-    builder = pynini.Formatter(config)
+    import logging
+    import c11r.environment
+    from c11r.formatting import Formatter
+
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)-15s %(name)-15s %(levelname)-8s %(message)s',
+    )
+    environment = c11r.environment.auto()
+    builder = Formatter(environment)
     builder.run()

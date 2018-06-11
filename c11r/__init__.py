@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-# Pynini
+# The Conflatinator
 
 TODO: documentation
 
-:copyright: (C) 2016
+:copyright: (C) Daffidilly 2016-2018
 :license: Apache, see LICENSE for more details.
 """
 __docformat__ = 'markdown en'
-__version__ = '0.5'
-
-from pynini.exceptions import SetupError
-from pynini.setup import Setup
-from pynini.formatting import Formatter, Page
-
-__all__ = [
-  'SetupError', 'Setup', 'Formatter', 'Page',
-]
-
+__version__ = '1.0'

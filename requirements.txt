@@ -5,3 +5,4 @@ PyYAML==3.11
 CommonMark==0.7.5
 pyaml==15.8.2
 chainmap==1.0.2
+arrow==0.12.1  # technically could just use datetime, if pressed
