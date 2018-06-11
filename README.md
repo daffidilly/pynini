@@ -1,6 +1,14 @@
-# Conflatinntor
+# The Conflatinator
 
 The Conflatinator, formerly known as Pynini, is a fast, simple, standalone "static" HTML generator.
+
+## Rename
+
+If you previously used `pip install pynini` you should now install like this:
+
+    pip install conflatinator
+
+or update your `requirements.txt` file to reflect the name change.
 
 
 ## Installation
