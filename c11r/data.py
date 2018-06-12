@@ -1,24 +1,18 @@
-# Technically this import could be optional, because not everyone needs YAML.
-# If that becomes a requirement, surround this with a try/catch ImportError.
+import io
+import json
 import logging
+from configparser import ConfigParser
 
-import jinja2.ext
+from os.path import isfile, splitext
+
 import yaml
+import jinja2.ext
 from jinja2 import TemplateNotFound
-from os.path import isfile
+
+from c11r.exceptions import SetupError
 
 logger = logging.getLogger(__name__)
 
-
-class YamlDataLoader(object):
-    extension = '.yml'
-
-    def loadf(self, filename):
-        """Load a YAML file and return a dictionary"""
-        with open(filename) as f:
-            r = yaml.load(f)
-        ##print(r)
-        return r
 
 def yaml_to_template(filename):
     """Load the given YAML filename, and generate a Jinja template
@@ -30,7 +24,6 @@ def yaml_to_template(filename):
     the data, rather than load YAML then generate text then parse the
     text. Still, this is a pragmatic solution.
     """
-    import io
     with open(filename) as f:
         data = yaml.load(f)
 
@@ -39,6 +32,43 @@ def yaml_to_template(filename):
     for k, v in data.items():
         out.write('{{% set {}={} %}}\n'.format(k, repr(v)))
     return out.getvalue()
+
+
+def json_to_template(filename):
+    with open(filename) as f:
+        data = json.load(f)
+
+    if not isinstance(data, dict):
+        raise SetupError("JSON file {} does not contain an object (dict) as the sole root object".format(filename))
+
+    logger.info("%s -> %s", filename, data)
+    out = io.StringIO()
+    out.write('{# loaded JSON from %r #}\n' % filename)
+    for k, v in data.items():
+       out.write('{{% set {}={} %}}\n'.format(k, repr(v)))
+    # out.write('{{% set {}={} %}}\n'.format('json', repr(data)))
+    logger.debug("  %s -> >>>%s<<<", filename, out.getvalue())
+    return out.getvalue()
+
+
+def ini_to_template(filename):
+    cfg = ConfigParser()
+    cfg.read(filename)
+    out = io.StringIO()
+    out.write('{# loaded INI data from %r #}\n' % filename)
+    for section in cfg.sections():
+        key = section  # TODO: clean name, e.g. remove spaces, '-', etc.
+        value = dict(cfg.items(section))
+        out.write('{{% set {}={} %}}\n'.format(key, value))
+    return out.getvalue()
+
+
+data_formats = {
+    '.yml': yaml_to_template,
+    '.yaml': yaml_to_template,
+    '.json': json_to_template,
+    '.ini': ini_to_template,
+}
 
 
 class DataLoader(jinja2.loaders.BaseLoader):
@@ -63,14 +93,15 @@ class DataLoader(jinja2.loaders.BaseLoader):
     Writing a dedicated extension is an alternative approach that may
     have benefits, but this approach means "import ..." works.
     """
-
     def get_source(self, environment, template):
         # logger.info("DataLoader %s %s", environment, template)
-        if template.endswith('.yml'):
+        _, ext = splitext(template)
+        data_loader = data_formats.get(ext.lower())
+        if data_loader:
             if not isfile(template):
                 raise TemplateNotFound(template)
 
-            contents = yaml_to_template(template)
+            contents = data_loader(template)
             # logger.debug("loaded %s -> %s", template, contents)
             return contents, template, True
 

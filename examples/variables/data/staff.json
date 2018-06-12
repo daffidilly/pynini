@@ -1,0 +1,6 @@
+{
+  "staff": [
+    {"first": "Homer", "last": "Simpson"},
+    {"first": "Montgomery", "last": "Burns"}
+  ]
+}

@@ -2,18 +2,13 @@
 {% block body %}
 <h1>About</h1>
 {% include 'templates/menu.html.jinja2' %}
-<p>{{description}}</p>
-{% filter as_markdown %}
-{% include 'blurb.md' %}
-{% endfilter %}
+{% import 'data/staff.json' as json %}
 
+<h3>Staff:</h3>
 <ul class="staff">
-  {% for person in staff %}
-  <li>{{person.first}} {{person.last}}
-    <img alt="image of {{person.first}} {{person.last}}" src="{{person.img}}">
-  </li>
+  {% for person in json.staff %}
+  <li>{{person.last}}, {{person.first}}</li>
   {% endfor %}
 </ul>
 
 {% endblock body %}
-

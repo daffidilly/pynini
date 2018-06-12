@@ -5,7 +5,7 @@
 {% include 'templates/menu.html.jinja2' %}
 
 {# bring the data into the current scope #}
-{% import 'data/main.yml' as data %}
-Hello, &ldquo;<strong>{{data.name or 'OOPS, you should see a name here'}}</strong>&rdquo;.
+{% import 'data/main.yml' as main %}
+Hello, &ldquo;<strong>{{main.name or 'OOPS, you should see a name here'}}</strong>&rdquo;.
 
 {% endblock body %}
