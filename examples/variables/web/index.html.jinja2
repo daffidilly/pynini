@@ -2,10 +2,10 @@
 {% block body %}
 
 <h1>Home</h1>
-
 {% include 'templates/menu.html.jinja2' %}
 
-Hello, &ldquo;<strong>{{name or 'OOPS, you should see a name here'}}</strong>&rdquo;.
+{# bring the data into the current scope #}
+{% import 'data/main.yml' as data %}
+Hello, &ldquo;<strong>{{data.name or 'OOPS, you should see a name here'}}</strong>&rdquo;.
 
 {% endblock body %}
-

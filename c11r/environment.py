@@ -10,10 +10,12 @@ import arrow as arrow
 import jinja2
 from pathlib import Path
 
+from jinja2 import ChoiceLoader
+
 from .processing import JinjaProcessor, DefaultProcessor
-from .data import YamlDataLoader
+from .data import YamlDataLoader, DataLoader
 from .exceptions import SetupError
-from .utils import auto_str, as_python, as_json, as_yaml, filter_markdown_to_html, SimpleLog
+from .utils import auto_str, as_python, as_json, as_yaml, filter_markdown_to_html
 
 logger = logging.getLogger(__name__)
 sect = 'conflatinator'
@@ -54,9 +56,9 @@ class Environment(object):
         self.src_dir = src_dir
         self.output_dir = output_dir
         self.include_dirs = include_dirs
-        self.data_loaders = data_loaders or {
-            YamlDataLoader.extension: YamlDataLoader(),
-        }
+        # self.data_loaders = data_loaders or {
+        #     YamlDataLoader.extension: YamlDataLoader(),
+        # }
         self.data_extensions = self.data_loaders.keys()
         # self.template_extensions = template_extensions or ('.jinja2',)
         jinja_processor = JinjaProcessor()
@@ -77,11 +79,14 @@ class Environment(object):
 
         # self.template_writer = template_writer or TemplateFileWriter()
 
+        data_loader = DataLoader()
         # see http://jinja.pocoo.org/docs/dev/api/#high-level-api
         self.jinja = jinja2.Environment(
-            loader=template_loader,
+            loader=ChoiceLoader([data_loader, template_loader]),
             trim_blocks=True,
             lstrip_blocks=True,
+            # extensions=(DataLoaderExtension,),
+            # extensions=('c11r.data.DataLoaderExtension',),
         )
 
         self.jinja.filters['as_python'] = as_python

@@ -7,6 +7,8 @@ from pathlib import Path
 import jinja2
 from jinja2 import Template
 
+from c11r.exceptions import ProcessingError
+
 logger = logging.getLogger(__name__)
 
 
@@ -68,4 +70,4 @@ class JinjaProcessor(DefaultProcessor):
                 # env.jinja.template_writer.write(template, context, str(output_file_path))
                 template.stream(context).dump(dest)
         except jinja2.exceptions.TemplateSyntaxError as tse:
-            logger.error("%s:%s: %s %s", tse.filename, tse.lineno, tse.name, tse.message)
+            raise ProcessingError("%s:%s: error '%s': %s" % (tse.filename, tse.lineno, tse.name, tse.message))

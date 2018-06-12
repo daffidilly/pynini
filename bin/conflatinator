@@ -38,6 +38,7 @@ if __name__ == "__main__":
     import logging
     import c11r.environment
     from c11r.formatting import Formatter
+    from c11r.exceptions import ProcessingError
 
     logging.basicConfig(
         level=logging.DEBUG,
@@ -45,4 +46,9 @@ if __name__ == "__main__":
     )
     environment = c11r.environment.auto()
     builder = Formatter(environment)
-    builder.run()
+    try:
+        builder.run()
+    except ProcessingError as e:
+        sys.stderr.write("%s\n" % e)
+        sys.exit(1)
+
