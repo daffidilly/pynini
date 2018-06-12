@@ -1,0 +1,19 @@
+<h3>This is HTML</h3>
+<div style="border: 1px solid black; padding: 1em; margin: 1em">
+{% filter as_markdown %}
+# This is Markdown.
+
+It uses [CommonMark](http://commonmark.org/), which is great because:
+
+- clear and consistent rules
+- parse to AST
+- "much much more"
+
+Code:
+
+    int main(int argc, const char** argv) {
+        return 0;
+    }
+
+{% endfilter %}
+
