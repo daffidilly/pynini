@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
-import pathlib
 from os import walk
-from os.path import splitext
+from os.path import splitext, isfile, isdir
+from pathlib import Path
 
 # from chainmap import ChainMap  # python 2.7 polyfill; uses Python 3 ChainMap if available
 # from .utils import mkdir_p
@@ -17,43 +17,62 @@ class Formatter(object):
 
     def __init__(self, setup):
         self.setup = setup
-        self.data = dict()
+        self.output_dir = Path(self.setup.output_dir)  # TODO rename output_path
+        # self.data = dict()
 
     def run(self):
-        self.walk_src()
+        for path in (Path(path) for path in self.setup.paths):
+            if path.is_file():
+                self.process_file(path)
+            elif path.is_dir():
+                self.walk_src(path)
+            else:
+                logger.warning("Unrecognised file type: %s", str(path))
 
-    def walk_src(self):
-        logger.debug("walk_src: {}".format(self.setup.src_dir))
-        output_dir = pathlib.Path(self.setup.output_dir)
-        for root, dirs, files in walk(self.setup.src_dir):
-            root = pathlib.Path(root)
+    def walk_src(self, path):
+        logger.debug("walk_src: {}".format(path))
+        for root, dirs, files in walk(path):
+            root = Path(root)
             #logger.debug("walk_src root={}, dirs={}, files={}".format(root, dirs, files))
             for filename in files:
-                filename_path = root / filename
-                start, ext = splitext(filename)
-                logger.debug("process: {:60s}-> {}".format(str(filename_path), ext))
-                processor = self.setup.processor_for_ext(ext)
-                output_path = processor.output_path(root, start, ext)
-                output_rel_path = output_path.relative_to(self.setup.src_dir)
-                logger.info("Rel: %s", output_rel_path)
-                output_path = output_dir / output_rel_path
-                if output_path:
-                    logger.debug('-> %s (%s)', output_path, processor.name)
-                    # output_path = self.setup.output_dir + '/' + output_name
-                    logger.debug('=> final: %s', output_path)
-
-                    processor.process(self.setup, filename_path, output_path)
-                    # in above, write output to output_path, creating dirs with correct permissions
-                else:
-                    logger.debug('-> no output for %s', filename_path)
-
-                # if ext in self.setup.template_extensions:
-                #     output_name = root + '/' + start  # substract the template extension
-                #     logger.debug('-> a template into %s', output_name)
-                # else:
-                #     logger.debug('-> copy as is')
+                self.process_file(filename_path=root / filename)
 
         logger.info("walk_src: DONE")
+
+    def process_file(self, filename_path):  # , root: Path):
+        # filename_path = root / filename
+        # start, ext = splitext(filename)
+
+        # https://docs.python.org/3/library/pathlib.html#pathlib.PurePath.stem
+        start = filename_path.stem
+        ext = filename_path.suffix
+        logger.debug("process: {}-> {}".format(str(filename_path), ext))
+
+        # find the right processor based on file extension, so 'jinja2' files
+        # are processed by JinjaProcessor, for example.
+        processor = self.setup.processor_for_ext(ext)
+
+        output_filename = processor.get_output_filename(filename_path.parent, start, ext)
+        output_rel_path = output_filename.relative_to(self.setup.src_dir)
+        logger.info("Rel: %s", output_rel_path)
+
+        output_path = self.output_dir / output_rel_path
+
+        if output_path:
+            logger.debug('-> %s (%s)', output_path, processor.name)
+            # output_path = self.setup.output_dir + '/' + output_name
+            logger.debug('=> final: %s', output_path)
+
+            processor.process(self.setup, filename_path, output_path)
+            # in above, write output to output_path, creating dirs with correct permissions
+        else:
+            logger.debug('-> no output for %s', filename_path)
+
+            # if ext in self.setup.template_extensions:
+            #     output_name = root + '/' + start  # substract the template extension
+            #     logger.debug('-> a template into %s', output_name)
+            # else:
+            #     logger.debug('-> copy as is')
 
     # def load_data(self):
     #     # TODO DELETE THIS COMMENT AND LOGIC

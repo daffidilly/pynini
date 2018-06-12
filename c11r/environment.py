@@ -38,12 +38,18 @@ def check_dirs(kind, dir_or_dirs, create=False):
 
 @auto_str
 class Environment(object):
-    def __init__(self, operation_dir, src_dir, output_dir, include_dirs,
+    def __init__(self,
+                 operation_dir,
+                 paths,
+                 src_dir,
+                 output_dir,
+                 include_dirs,
                  verbosity=0,
                  data_loaders=None,
                  # template_extensions=None,
                  template_loader=None,
                  template_writer=None):
+        self.paths = paths
         self.operation_dir = operation_dir
         self.src_dir = src_dir
         self.output_dir = output_dir
@@ -53,13 +59,15 @@ class Environment(object):
         }
         self.data_extensions = self.data_loaders.keys()
         # self.template_extensions = template_extensions or ('.jinja2',)
+        jinja_processor = JinjaProcessor()
         self.processors = {
-            '.jinja2': JinjaProcessor()
+            '.jinja2': jinja_processor,
+            '.jinja': jinja_processor,
+            '.j2': jinja_processor,
         }
         self.default_processor = DefaultProcessor()
 
         self.verbosity = verbosity
-        self.log = SimpleLog(level=self.verbosity)
 
         self.mkdir_perms = 0o777  # TODO: is this needed?
 
@@ -93,7 +101,7 @@ def auto_config(operation_dir=None):
     operation_dir = operation_dir or getcwd()
     config = configparser.ConfigParser()
     config[sect] = {
-        'src_dir': 'pages',
+        'src_dir': 'web',
         'output_dir': 'dist',  # or release or output?
         'include_dirs': '',
         'verbosity': '0',
@@ -122,6 +130,8 @@ def auto(argv=None, prog=None):
     config = auto_config(operation_dir)
 
     arg_parser = ArgumentParser(prog=prog, description='Static HTML generator')
+    arg_parser.add_argument('paths', metavar='path', type=str, nargs='*',
+                            help='paths to load')
     arg_parser.add_argument('--verbosity', '-v',
                             action='count',
                             help='increase log verbosity',
@@ -142,6 +152,7 @@ def auto(argv=None, prog=None):
 
     parsed_args = arg_parser.parse_args(argv[1:])
     logger.debug('parsed: %s', parsed_args)
+    logger.debug('paths: %s', parsed_args.paths)
     logger.debug('src_dir: %s', parsed_args.src)
     logger.debug('output_dir: %s', parsed_args.output)
     logger.debug('include_dirs: %s', parsed_args.include)
@@ -159,6 +170,7 @@ def auto(argv=None, prog=None):
     include_dirs = check_dirs('include', parsed_args.include)
 
     return Environment(operation_dir,
+                       paths=parsed_args.paths or [src_dir],
                        src_dir=src_dir,
                        output_dir=output_dir,
                        include_dirs=include_dirs,

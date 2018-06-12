@@ -1,8 +1,9 @@
 *.pyc
 mypy
 *.swp
-dist
 .idea
 *.iml
 build
+dist
+release
 pynini.egg-info

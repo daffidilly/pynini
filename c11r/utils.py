@@ -21,44 +21,44 @@ markdown_renderer = CommonMark.HtmlRenderer()
 # html = renderer.render(ast)
 
 
-def mkdir_p_polyfill(path, perms, exist_ok):
-    """Make directories including parents.
-    Python >= 3.2 doesn't need this because the exist_ok parameter is there.
-    However, earlier python versions don't have that.
-    See http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python/600612#600612
-    """
-    try:
-        os.makedirs(path, perms)
-    except OSError as exc:  # Python >2.5
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
-        else:
-            raise
+# def mkdir_p_polyfill(path, perms, exist_ok):
+#     """Make directories including parents.
+#     Python >= 3.2 doesn't need this because the exist_ok parameter is there.
+#     However, earlier python versions don't have that.
+#     See http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python/600612#600612
+#     """
+#     try:
+#         os.makedirs(path, perms)
+#     except OSError as exc:  # Python >2.5
+#         if exc.errno == errno.EEXIST and os.path.isdir(path):
+#             pass
+#         else:
+#             raise
+#
+#
+# # TODO REQUIRE python 3.2 AND DELETE THIS
+# mkdir_p = mkdir_p_polyfill if sys.version_info < (3, 2) else os.makedirs
 
-
-# TODO REQUIRE python 3.2 AND DELETE THIS
-mkdir_p = mkdir_p_polyfill if sys.version_info < (3, 2) else os.makedirs
-
-
-# TODO DELETE THIS; USE NORMAL LOGGER
-class SimpleLog(object):
-    def __init__(self, level):
-        self.level = level or 0
-
-    def debug(self, *args):
-        if self.level > 1:
-            print(' '.join(args))
-
-    def info(self, *args):
-        # print("level=%s"% self.level)
-        if self.level > 0:
-            print(' '.join(args))
-
-    def warn(self, *args):
-        print("WARN:", ' '.join(args))
-
-    def error(self, *args):
-        print("ERROR:", ' '.join(args))
+#
+# # TODO DELETE THIS; USE NORMAL LOGGER
+# class SimpleLog(object):
+#     def __init__(self, level):
+#         self.level = level or 0
+#
+#     def debug(self, *args):
+#         if self.level > 1:
+#             print(' '.join(args))
+#
+#     def info(self, *args):
+#         # print("level=%s"% self.level)
+#         if self.level > 0:
+#             print(' '.join(args))
+#
+#     def warn(self, *args):
+#         print("WARN:", ' '.join(args))
+#
+#     def error(self, *args):
+#         print("ERROR:", ' '.join(args))
 
 
 def auto_str(cls):

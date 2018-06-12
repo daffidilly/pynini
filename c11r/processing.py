@@ -31,7 +31,7 @@ def ensure_dirs(output_path: Path, src_path: Path):
 class DefaultProcessor:
     name = 'Copy as-is'
 
-    def output_path(self, root_path, filename_base, filename_ext):
+    def get_output_filename(self, root_path, filename_base, filename_ext):
         return root_path / (filename_base + filename_ext)
 
     def process(self, env, src_file_path, output_file_path):
@@ -43,7 +43,7 @@ class DefaultProcessor:
 class JinjaProcessor(DefaultProcessor):
     name = 'Jinja'
 
-    def output_path(self, root_path, filename_base, filename_ext):
+    def get_output_filename(self, root_path, filename_base, filename_ext):
         return root_path / filename_base  # no filename_ext
 
     def process(self, env, src_file_path: Path, output_file_path: Path):
