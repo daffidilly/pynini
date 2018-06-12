@@ -1,10 +1,10 @@
-{% extends "layouts/main.html" %}
+{% extends "templates/main.html.jinja2" %}
 {% block body %}
 <h1>About</h1>
-{% include 'partials/menu.html' %}
+{% include 'templates/menu.html.jinja2' %}
 <p>{{description}}</p>
 {% filter as_markdown %}
-{% include 'partials/blurb.md' %}
+{% include 'blurb.md' %}
 {% endfilter %}
 
 <ul class="staff">
